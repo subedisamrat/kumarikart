@@ -29,7 +29,7 @@ const CheckAuth = ({ isAuthenticated, user, children }) => {
     }
   }
 
-  //For safety reason, if user is valid but don't have role of admin then send to unauth page.
+  //For safety reason, if authenticated user is valid but don't have role of admin then send to unauth page.
 
   if (
     isAuthenticated &&

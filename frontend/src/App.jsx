@@ -32,20 +32,6 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   const checkUserAuth = async () => {
-  //     try {
-  //       dispatch(checkAuth());
-  //     } catch (error) {
-  //       if (error.response && error.response.status === 401) {
-  //         navigate("/auth/login");
-  //       }
-  //     }
-  //   };
-
-  //   checkUserAuth();
-  // }, [dispatch, navigate]);
-
   if (isLoading) return <Skeleton className="w-[600px] h-[550px] rounded-md" />;
 
   return (
@@ -69,6 +55,20 @@ function App() {
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
+
+        {/*  */}
+
+        {/* Admin Login Path */}
+        {/* <Route
+          path="/admin/login"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+              <AuthLayout />
+            </CheckAuth>
+          }
+        >
+          <Route index element={<AuthLogin />} />
+        </Route> */}
 
         {/* Admin Page*/}
 

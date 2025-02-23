@@ -9,11 +9,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
-import { fetchFilteredProducts } from "@/store/shop/products-slice";
+import {
+  fetchFilteredProducts,
+  fetchProductDetails,
+} from "@/store/shop/products-slice";
 import { ArrowUpDown } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import ProductDetailsDialog from "../../components/shopping-view/product-details";
 
 //should work in detail part where we add items to cart and then appear a dialog... date:2025-2-20 ts: 6:33:41
 
@@ -32,13 +36,16 @@ function createSearchParamsHelper(filterParams) {
 
 const ShoppingList = () => {
   const dispatch = useDispatch();
-  const { productList = [] } = useSelector((state) => state.shopProducts);
+  const { productList = [], productDetails } = useSelector(
+    (state) => state.shopProducts,
+  );
 
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   function handleSort(value) {
     //console.log(value);
     setSort(value);
@@ -72,6 +79,11 @@ const ShoppingList = () => {
     sessionStorage.setItem("filters", JSON.stringify(copyFilters));
   }
 
+  function handleGetProductDetails(getCurrentProductId) {
+    //console.log(getCurrentProductId);
+    dispatch(fetchProductDetails(getCurrentProductId));
+  }
+
   useEffect(() => {
     setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
@@ -91,6 +103,11 @@ const ShoppingList = () => {
       );
   }, [dispatch, sort, filters]);
 
+  useEffect(() => {
+    if (productDetails !== null) setOpenDetailsDialog(true);
+  }, [productDetails]);
+
+  //console.log("product details", productDetails);
   //console.log(productList);
   //console.log("SearchParams", searchParams);
 
@@ -135,6 +152,7 @@ const ShoppingList = () => {
           {productList && productList.length > 0 ? (
             productList.map((productItem, idx) => (
               <ShoppingProductTile
+                handleGetProductDetails={handleGetProductDetails}
                 key={productItem.id || idx}
                 product={productItem}
               />
@@ -146,6 +164,11 @@ const ShoppingList = () => {
           )}
         </div>
       </div>
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetails={productDetails}
+      />
     </div>
   );
 };
