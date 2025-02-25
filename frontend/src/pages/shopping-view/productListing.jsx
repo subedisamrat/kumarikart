@@ -18,6 +18,8 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import ProductDetailsDialog from "../../components/shopping-view/product-details";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import { useToast } from "@/components/ui/use-toast";
 
 //should work in detail part where we add items to cart and then appear a dialog... date:2025-2-20 ts: 6:33:41
 
@@ -39,13 +41,13 @@ const ShoppingList = () => {
   const { productList = [], productDetails } = useSelector(
     (state) => state.shopProducts,
   );
-
+  const { user } = useSelector((state) => state.auth);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
-
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const { toast } = useToast();
+
   function handleSort(value) {
     //console.log(value);
     setSort(value);
@@ -82,6 +84,26 @@ const ShoppingList = () => {
   function handleGetProductDetails(getCurrentProductId) {
     //console.log(getCurrentProductId);
     dispatch(fetchProductDetails(getCurrentProductId));
+  }
+
+  function handleAddtoCart(getCurrentProductId) {
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: "Success",
+          variant: "outline",
+          description: "Product added to the cart",
+        });
+      }
+    });
+    //console.log(getCurrentProductId);
   }
 
   useEffect(() => {
@@ -155,6 +177,7 @@ const ShoppingList = () => {
                 handleGetProductDetails={handleGetProductDetails}
                 key={productItem.id || idx}
                 product={productItem}
+                handleAddtoCart={handleAddtoCart}
               />
             ))
           ) : (

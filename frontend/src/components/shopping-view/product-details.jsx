@@ -1,66 +1,3 @@
-// import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-// import React from "react";
-// import { Button } from "../ui/button";
-// import { Separator } from "../ui/separator";
-
-// const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
-//   if (!productDetails) return null;
-//   return (
-//     <Dialog open={open} onOpenChange={setOpen}>
-//       <DialogContent
-//         aria-describedby={undefined}
-//         className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]"
-//       >
-//         <div className="relative overflow-hidden rounded-lg">
-//           <img
-//             src={productDetails?.image}
-//             alt={productDetails?.title}
-//             width={600}
-//             height={600}
-//             className="aspect-square w-full object-cover"
-//           />
-//           <DialogTitle>
-//             <div className="grid gap-6">
-//               <div>
-//                 <h1 className="text-3xl font-extrabold mt-2">
-//                   {productDetails?.title}
-//                 </h1>
-//                 <p className="text-muted-foreground text-2xl mt-2">
-//                   "{productDetails.description}"
-//                 </p>
-//               </div>
-//               <div className="flex items-center justify-between">
-//                 <p
-//                   className={`text-3xl font-bold text-primary ${
-//                     productDetails.salePrice < productDetails.price
-//                       ? "line-through"
-//                       : ""
-//                   }`}
-//                 >
-//                   Rs.{productDetails.price}
-//                 </p>
-//                 {productDetails.salePrice < productDetails.price ? (
-//                   <p className="text-2xl font-bold text-muted-foreground">
-//                     Rs.{productDetails.salePrice}
-//                   </p>
-//                 ) : (
-//                   nulll
-//                 )}
-//               </div>
-//               <div>
-//                 <Button className="mt-2 w-full">Add to Cart</Button>
-//               </div>
-//             </div>
-//             <Separator />
-//           </DialogTitle>
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// };
-
-// export default ProductDetailsDialog;
-
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import React from "react";
 import { Button } from "../ui/button";
@@ -68,8 +5,35 @@ import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { StarIcon } from "lucide-react";
 import { Input } from "../ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import { useToast } from "../ui/use-toast";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { toast } = useToast();
+
+  function handleAddtoCart(getCurrentProductId) {
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: "Success",
+          variant: "outline",
+          description: "Product added to the cart",
+        });
+      }
+    });
+    //console.log(getCurrentProductId);
+  }
+
   if (!productDetails) return null;
 
   return (
@@ -134,7 +98,12 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
 
           {/* Add to Cart Button Below */}
           <div className="mt-5 mb-5">
-            <Button className="mt-2 w-full">Add to Cart</Button>
+            <Button
+              onClick={() => handleAddtoCart(productDetails?._id)}
+              className="mt-2 w-full"
+            >
+              Add to Cart
+            </Button>
           </div>
           <Separator />
 
