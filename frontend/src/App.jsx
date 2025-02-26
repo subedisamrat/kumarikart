@@ -42,7 +42,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/unauth-page" element={<UnAuthPage />} />
 
-        {/* AuthLayout Page*/}
+        {/* AuthLayout i.e Authorisation Page where user is checked if it's legit or not*/}
 
         <Route
           path="/auth"
@@ -55,22 +55,6 @@ function App() {
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
-
-        {/*  */}
-
-        {/* Admin Login Path */}
-        {/* <Route
-          path="/admin/login"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <AuthLayout />
-            </CheckAuth>
-          }
-        >
-          <Route index element={<AuthLogin />} />
-        </Route> */}
-
-        {/* Admin Page*/}
 
         <Route
           path="/admin"

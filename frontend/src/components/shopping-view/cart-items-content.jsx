@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Minus, Plus, Trash } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,21 +10,41 @@ const UserCartItemsContent = ({ cartItem }) => {
   const { user } = useSelector((state) => state.auth);
   const { toast } = useToast();
 
+  const [quantity, setQuantity] = useState(cartItem?.quantity);
+
   function handleUpdateQuantity(getCartItem, typeofAction) {
+    const newQuantity =
+      typeofAction === "plus" ? quantity + 1 : Math.max(quantity - 1, 1);
+
+    setQuantity(newQuantity);
+    updateQuantity(getCartItem, newQuantity);
+  }
+
+  function handleQuantityChange(event) {
+    const value = event.target.value;
+    if (value === "" || /^[0-9]+$/.test(value)) {
+      setQuantity(value);
+    }
+  }
+
+  function handleQuantityBlur(getCartItem) {
+    const newQuantity = Math.max(parseInt(quantity) || 1, 1);
+    setQuantity(newQuantity);
+    updateQuantity(getCartItem, newQuantity);
+  }
+
+  function updateQuantity(getCartItem, newQuantity) {
     dispatch(
       updateCartItems({
         userId: user?.id,
         productId: getCartItem?.productId,
-        quantity:
-          typeofAction === "plus"
-            ? getCartItem?.quantity + 1
-            : getCartItem?.quantity - 1,
+        quantity: newQuantity,
       }),
     ).then((data) => {
       if (data.payload.success) {
         toast({
           title: "Success",
-          description: "Cart item updated !!",
+          description: "Cart item updated!",
         });
       }
     });
@@ -37,7 +57,8 @@ const UserCartItemsContent = ({ cartItem }) => {
       if (data.payload.success) {
         toast({
           title: "Success",
-          description: "Cart item deleted !!",
+          description: "Cart item deleted!",
+          variant: "destructive",
         });
       }
     });
@@ -52,19 +73,25 @@ const UserCartItemsContent = ({ cartItem }) => {
       />
       <div className="flex-1">
         <h3 className="font-extrabold">{cartItem?.title}</h3>
-        <div className="flex items-center gap-3 mt-1 ">
+        <div className="flex items-center gap-3 mt-1">
           <Button
             variant="outline"
             size="icon"
             className="h-8 w-8 rounded-full"
             onClick={() => handleUpdateQuantity(cartItem, "minus")}
-            disabled={cartItem?.quantity === 1}
+            disabled={quantity <= 1}
           >
             <Minus className="w-4 h-4" />
             <span className="sr-only">Decrease</span>
           </Button>
 
-          <span className="font-semibold ">{cartItem.quantity}</span>
+          <input
+            type="text"
+            className="w-12 text-center border border-gray-300 rounded"
+            value={quantity}
+            onChange={handleQuantityChange}
+            onBlur={() => handleQuantityBlur(cartItem)}
+          />
 
           <Button
             variant="outline"
@@ -83,7 +110,7 @@ const UserCartItemsContent = ({ cartItem }) => {
           {(
             (cartItem?.salePrice < cartItem?.price
               ? cartItem?.salePrice
-              : cartItem?.price) * cartItem?.quantity
+              : cartItem?.price) * quantity
           ).toFixed(2)}
         </p>
         <Trash
