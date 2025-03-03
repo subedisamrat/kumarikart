@@ -32,7 +32,7 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  if (isLoading) return <Skeleton className="w-[600px] h-[550px] rounded-md" />;
+  if (isLoading) return <Skeleton className="w-[800px] h-[600px] rounded-md" />;
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
@@ -41,6 +41,17 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
         <Route path="/unauth-page" element={<UnAuthPage />} />
+
+        <Route
+          path="/"
+          element={
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+            ></CheckAuth>
+          }
+        />
+        <Route />
 
         {/* AuthLayout i.e Authorisation Page where user is checked if it's legit or not*/}
 

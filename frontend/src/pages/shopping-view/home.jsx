@@ -1,8 +1,20 @@
 import React, { useEffect, useState } from "react";
-import kumariBanner from "../../assets/kumaribanner.webp";
-import bannerOne from "../../assets/banner-1.webp";
-import bannerTwo from "../../assets/banner-2.webp";
-import bannerThree from "../../assets/banner-3.webp";
+//Banner Images
+import kumariBanner from "../../assets/banners/kumaribanner.webp";
+import bannerOne from "../../assets/banners/banner-1.webp";
+import bannerTwo from "../../assets/banners/banner-2.webp";
+import bannerThree from "../../assets/banners/banner-3.webp";
+//Brand Icons
+import adidasIcon from "../../assets/brands/adidas.svg";
+import nikeIcon from "../../assets/brands/nike.svg";
+import pumaIcon from "../../assets/brands/puma.webp";
+import hnmIcon from "../../assets/brands/h&m.webp";
+import chanelIcon from "../../assets/brands/chanel.webp";
+import leviIcon from "../../assets/brands/levi's.webp";
+//Category Images
+import menIcon from "../../assets/categories/men.jpg";
+import kidsIcon from "../../assets/categories/kids.webp";
+import womenIcon from "../../assets/categories/women.webp";
 import { Button } from "@/components/ui/button";
 import {
   Blocks,
@@ -15,32 +27,83 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchFilteredProducts } from "@/store/shop/products-slice";
+import {
+  fetchFilteredProducts,
+  fetchProductDetails,
+} from "@/store/shop/products-slice";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
+import ProductDetailsDialog from "@/components/shopping-view/product-details";
 
 const categoriesWithIcon = [
-  { id: "men", label: "Men", icon: ShirtIcon },
-  { id: "women", label: "Women", icon: Coffee },
-  { id: "kids", label: "Kids", icon: Blocks },
+  { id: "men", label: "Men", icon: menIcon },
+  { id: "kids", label: "Kids", icon: kidsIcon },
+  { id: "women", label: "Women", icon: womenIcon },
   { id: "accessories", label: "Accessories", icon: Wrench },
   { id: "footwear", label: "Footwear", icon: Footprints },
 ];
 
-//Should change brand icon
 const brandwithIcon = [
-  { id: "nike", label: "Nike", icon: ShirtIcon },
-  { id: "adidas", label: "Adidas", icon: Coffee },
-  { id: "puma", label: "Puma", icon: Coffee },
-  { id: "levi", label: "Levi's", icon: Coffee },
-  { id: "zara", label: "Zara", icon: Coffee },
-  { id: "h&m", label: "H&M", icon: Coffee },
+  { id: "chanel", label: "Chanel", icon: chanelIcon },
+  { id: "adidas", label: "Adidas", icon: adidasIcon },
+  { id: "nike", label: "Nike", icon: nikeIcon },
+  { id: "puma", label: "Puma", icon: pumaIcon },
+  { id: "levi", label: "Levi's", icon: leviIcon },
+  { id: "h&m", label: "H&M", icon: hnmIcon },
+  //{ id: "zara", label: "Zara", icon: Coffee },
 ];
 
 const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const dispatch = useDispatch();
-  const { productList } = useSelector((state) => state.shopProducts);
+  const { productList, productDetails } = useSelector(
+    (state) => state.shopProducts,
+  );
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const { user } = useSelector((state) => state.auth);
   const slides = [kumariBanner, bannerOne, bannerTwo, bannerThree];
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  function handleNavigateToListingPage(getCurrentItem, section) {
+    sessionStorage.removeItem("filters");
+    const currentFilters = {
+      [section]: [getCurrentItem.id],
+    };
+    sessionStorage.setItem("filters", JSON.stringify(currentFilters));
+    navigate("/shop/listing");
+  }
+
+  function handleGetProductDetails(getCurrentProductId) {
+    //console.log(getCurrentProductId);
+    dispatch(fetchProductDetails(getCurrentProductId));
+  }
+
+  function handleAddtoCart(getCurrentProductId) {
+    dispatch(
+      addToCart({
+        userId: user?.id,
+        productId: getCurrentProductId,
+        quantity: 1,
+      }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: "Success",
+          description: "Product added to the cart",
+          outline: "none",
+        });
+      }
+    });
+    //console.log(getCurrentProductId);
+  }
+
+  useEffect(() => {
+    if (productDetails !== null) setOpenDetailsDialog(true);
+  }, [productDetails]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -102,13 +165,36 @@ const ShoppingHome = () => {
             Shop by Category
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {categoriesWithIcon.map((categoryItem) => (
+            {/* {categoriesWithIcon.map((categoryItem) => (
               <Card
                 key={categoryItem.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
+                  <span className="font-bold">{categoryItem.label}</span>
+                </CardContent>
+              </Card>
+            ))} */}
+
+            {categoriesWithIcon.map((categoryItem) => (
+              <Card
+                onClick={() =>
+                  handleNavigateToListingPage(categoryItem, "category")
+                }
+                key={categoryItem.id}
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+              >
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  {typeof categoryItem.icon === "string" ? (
+                    <img
+                      src={categoryItem.icon}
+                      alt={categoryItem.label}
+                      className="w-12 h-12 mb-4"
+                    />
+                  ) : (
+                    <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
+                  )}
                   <span className="font-bold">{categoryItem.label}</span>
                 </CardContent>
               </Card>
@@ -123,13 +209,34 @@ const ShoppingHome = () => {
             Shop by Brands
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {brandwithIcon.map((brandItem) => (
+            {/* {brandwithIcon.map((brandItem) => (
               <Card
                 key={brandItem.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow"
               >
                 <CardContent className="flex flex-col items-center justify-center p-6">
                   <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
+                  <span className="font-bold">{brandItem.label}</span>
+                </CardContent>
+              </Card>
+            ))} */}
+
+            {brandwithIcon.map((brandItem) => (
+              <Card
+                onClick={() => handleNavigateToListingPage(brandItem, "brand")}
+                key={brandItem.id}
+                className="cursor-pointer hover:shadow-lg transition-shadow"
+              >
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                  {typeof brandItem.icon === "string" ? (
+                    <img
+                      src={brandItem.icon}
+                      alt={brandItem.label}
+                      className="w-12 h-12 mb-4"
+                    />
+                  ) : (
+                    <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
+                  )}
                   <span className="font-bold">{brandItem.label}</span>
                 </CardContent>
               </Card>
@@ -149,12 +256,19 @@ const ShoppingHome = () => {
                   <ShoppingProductTile
                     key={productItem._id || index}
                     product={productItem}
+                    handleGetProductDetails={handleGetProductDetails}
+                    handleAddtoCart={handleAddtoCart}
                   />
                 ))
               : null}
           </div>
         </div>
       </section>
+      <ProductDetailsDialog
+        open={openDetailsDialog}
+        setOpen={setOpenDetailsDialog}
+        productDetails={productDetails}
+      />
     </div>
   );
 };

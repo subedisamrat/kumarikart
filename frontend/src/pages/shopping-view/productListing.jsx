@@ -47,6 +47,7 @@ const ShoppingList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { toast } = useToast();
+  const categorySearchParam = searchParams.get("category");
 
   function handleSort(value) {
     //console.log(value);
@@ -98,7 +99,6 @@ const ShoppingList = () => {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: "Success",
-          variant: "outline",
           description: "Product added to the cart",
         });
       }
@@ -109,7 +109,7 @@ const ShoppingList = () => {
   useEffect(() => {
     setSort("price-lowtohigh");
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-  }, []);
+  }, [categorySearchParam]);
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
