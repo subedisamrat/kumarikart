@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import { Button } from "../ui/button";
 import UserCartItemsContent from "./cart-items-content";
+import { useNavigate } from "react-router-dom";
 
-const UserCartWrapper = ({ cartItems }) => {
+const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
   const [isCheckoutDisabled, setIsCheckoutDisabled] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const hasInvalidItem = cartItems?.some((item) => item.quantity < 1);
@@ -42,7 +45,15 @@ const UserCartWrapper = ({ cartItems }) => {
           <span className="font-bold">Rs.{totalCartAmount}</span>
         </div>
       </div>
-      <Button className="w-full mt-6">CheckOut</Button>
+      <Button
+        onClick={() => {
+          navigate("/shop/checkout");
+          setOpenCartSheet(false);
+        }}
+        className="w-full mt-6"
+      >
+        CheckOut
+      </Button>
     </SheetContent>
   );
 };
