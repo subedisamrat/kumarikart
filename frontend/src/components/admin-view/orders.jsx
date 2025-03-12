@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import {
   Table,
@@ -9,8 +9,12 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
+import AdminOrderDetailsView from "./order-details";
+import { Dialog } from "../ui/dialog";
 
 const AdminOrdersView = () => {
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
   return (
     <Card>
       <CardHeader>
@@ -35,7 +39,18 @@ const AdminOrdersView = () => {
                 <TableCell>Pending</TableCell>
                 <TableCell>Rs. 6900</TableCell>
                 <TableCell>
-                  <Button>View Details</Button>
+                  <Dialog
+                    open={openDetailsDialog}
+                    onOpenChange={setOpenDetailsDialog}
+                  >
+                    <Button
+                      onClick={() => setOpenDetailsDialog(true)}
+                      className=" bg-blue-600 hover:bg-blue-700"
+                    >
+                      View Details
+                    </Button>
+                    <AdminOrderDetailsView />
+                  </Dialog>
                 </TableCell>
               </TableRow>
             </TableBody>

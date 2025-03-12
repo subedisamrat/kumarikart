@@ -125,7 +125,10 @@ const AdminProducts = () => {
   return (
     <Fragment>
       <div className="mb-5  w-full flex justify-end">
-        <Button onClick={() => setOpenCreateProductsDialog(true)}>
+        <Button
+          className=" bg-blue-600 hover:bg-blue-700"
+          onClick={() => setOpenCreateProductsDialog(true)}
+        >
           Add Product
         </Button>
       </div>

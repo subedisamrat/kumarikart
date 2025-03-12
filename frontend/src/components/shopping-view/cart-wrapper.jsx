@@ -50,7 +50,7 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
           navigate("/shop/checkout");
           setOpenCartSheet(false);
         }}
-        className="w-full mt-6"
+        className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
       >
         CheckOut
       </Button>

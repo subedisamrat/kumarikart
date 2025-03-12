@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
 import {
   Table,
@@ -9,8 +9,12 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
+import ShoppingOrderDetailsView from "./order-details";
+import { Dialog } from "../ui/dialog";
 
 const ShoppingOrders = () => {
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
   return (
     <Card>
       <CardHeader>
@@ -36,7 +40,18 @@ const ShoppingOrders = () => {
               <TableCell>Pending</TableCell>
               <TableCell>Rs. 6900</TableCell>
               <TableCell>
-                <Button>View Details</Button>
+                <Dialog
+                  open={openDetailsDialog}
+                  onOpenChange={setOpenDetailsDialog}
+                >
+                  <Button
+                    onClick={() => setOpenDetailsDialog(true)}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    View Details
+                  </Button>
+                  <ShoppingOrderDetailsView />
+                </Dialog>
               </TableCell>
             </TableRow>
           </TableBody>

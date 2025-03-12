@@ -61,7 +61,7 @@ const ShoppingProductTile = ({
         ) : (
           <Button
             onClick={() => handleAddtoCart(product?._id)}
-            className="w-full"
+            className="w-full bg-blue-600 hover:bg-blue-700"
           >
             Add to Cart
           </Button>

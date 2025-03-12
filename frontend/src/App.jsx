@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Navigate } from "react-router-dom";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -38,10 +39,8 @@ function App() {
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
         {/* Error Page */}
-
         <Route path="*" element={<NotFound />} />
         <Route path="/unauth-page" element={<UnAuthPage />} />
-
         <Route
           path="/"
           element={
@@ -52,9 +51,7 @@ function App() {
           }
         />
         <Route />
-
         {/* AuthLayout i.e Authorisation Page where user is checked if it's legit or not*/}
-
         <Route
           path="/auth"
           element={
@@ -66,7 +63,6 @@ function App() {
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
-
         <Route
           path="/admin"
           element={
@@ -80,8 +76,21 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
         </Route>
-
         {/* Shopping Page */}
+        {/*         
+        <Route
+          path="/shop"
+          element={
+            <CheckAuth inLayout isAuthenticated={isAuthenticated} user={user}>
+              <Shoppinglayout />
+            </CheckAuth>
+          }
+        >
+          <Route path="home" element={<ShoppingHome />} />
+          <Route path="listing" element={<ShoppingList />} />
+          <Route path="checkout" element={<ShoppingCheckout />} />
+          <Route path="account" element={<ShoppingAccount />} />
+        </Route> */}
 
         <Route
           path="/shop"
@@ -91,6 +100,8 @@ function App() {
             </CheckAuth>
           }
         >
+          {/* Default route to redirect to /shop/home */}
+          <Route index element={<Navigate to="/shop/home" replace />} />
           <Route path="home" element={<ShoppingHome />} />
           <Route path="listing" element={<ShoppingList />} />
           <Route path="checkout" element={<ShoppingCheckout />} />

@@ -38,7 +38,9 @@ const ShoppingCheckout = () => {
             </div>
           </div>
           <div className="mt-4">
-            <Button className="w-full">Check out with e-sewa</Button>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700">
+              Check out via paypal
+            </Button>
           </div>
         </div>
       </div>
