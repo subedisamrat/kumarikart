@@ -11,9 +11,21 @@ import {
 import { Button } from "../ui/button";
 import ShoppingOrderDetailsView from "./order-details";
 import { Dialog } from "../ui/dialog";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getAllOrdersByUserId } from "@/store/shop/order-slice";
+import { Badge } from "../ui/badge";
 
 const ShoppingOrders = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { orderList } = useSelector((state) => state.shopOrder);
+  useEffect(() => {
+    dispatch(getAllOrdersByUserId(user?.id));
+  }, [dispatch]);
+
+  //console.log(orderList);
 
   return (
     <Card>
@@ -34,26 +46,40 @@ const ShoppingOrders = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell>235463575</TableCell>
-              <TableCell>2025/03/9</TableCell>
-              <TableCell>Pending</TableCell>
-              <TableCell>Rs. 6900</TableCell>
-              <TableCell>
-                <Dialog
-                  open={openDetailsDialog}
-                  onOpenChange={setOpenDetailsDialog}
-                >
-                  <Button
-                    onClick={() => setOpenDetailsDialog(true)}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    View Details
-                  </Button>
-                  <ShoppingOrderDetailsView />
-                </Dialog>
-              </TableCell>
-            </TableRow>
+            {orderList && orderList.length > 0
+              ? orderList.map((orderItem) => (
+                  <TableRow>
+                    <TableCell>{orderItem?._id}</TableCell>
+                    <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`py-1 px-3 ${
+                          orderItem.orderStatus === "confirmed"
+                            ? "bg-green-500"
+                            : "bg-red-400"
+                        }`}
+                      >
+                        {orderItem?.orderStatus}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>Rs. {orderItem?.totalAmount}</TableCell>
+                    <TableCell>
+                      <Dialog
+                        open={openDetailsDialog}
+                        onOpenChange={setOpenDetailsDialog}
+                      >
+                        <Button
+                          onClick={() => setOpenDetailsDialog(true)}
+                          className="bg-blue-600 hover:bg-blue-700"
+                        >
+                          View Details
+                        </Button>
+                        <ShoppingOrderDetailsView />
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : null}
           </TableBody>
         </Table>
       </CardContent>

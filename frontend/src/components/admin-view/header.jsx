@@ -24,7 +24,7 @@ const AdminHeader = ({ setOpen }) => {
     <header className="flex items-center justify-between px-6 py-3 bg-gray-50 shadow-md border-b border-gray-200">
       <Button
         onClick={() => setOpen(true)}
-        className="lg:hidden sm:block p-2 rounded-md hover:bg-gray-100 transition"
+        className="lg:hidden sm:block p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-all shadow-md"
       >
         <AlignJustify className="w-6 h-6 text-gray-700" />
         <span className="sr-only">Toggle Menu</span>
@@ -32,7 +32,7 @@ const AdminHeader = ({ setOpen }) => {
       <div className="flex flex-1 justify-end">
         <Button
           onClick={() => setOpenDialog(true)}
-          className="flex items-center gap-2 text-white bg-slate-600 border border-gray-500 px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition-all"
+          className="flex items-center gap-2 text-white bg-blue-600 border border-blue-500 px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all"
         >
           <LogOut className="w-5 h-5 text-white" />
           <span className="font-medium">Log Out</span>
@@ -47,7 +47,7 @@ const AdminHeader = ({ setOpen }) => {
             </DialogTitle>
           </DialogHeader>
           <p className="text-gray-700 text-sm">
-            Are you sure you want to log out?
+            Are you sure you want to log out? You will need to log in again.
           </p>
           <DialogFooter className="flex justify-end gap-4">
             <Button
