@@ -13,19 +13,34 @@ import ShoppingOrderDetailsView from "./order-details";
 import { Dialog } from "../ui/dialog";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getAllOrdersByUserId } from "@/store/shop/order-slice";
+import {
+  getAllOrdersByUserId,
+  getOrderDetails,
+  resetOrderDetails,
+} from "@/store/shop/order-slice";
 import { Badge } from "../ui/badge";
 
 const ShoppingOrders = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { orderList } = useSelector((state) => state.shopOrder);
+  const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
+
+  function handlefetchOrderDetails(getId) {
+    dispatch(getOrderDetails(getId));
+  }
+
   useEffect(() => {
     dispatch(getAllOrdersByUserId(user?.id));
   }, [dispatch]);
 
-  //console.log(orderList);
+  useEffect(() => {
+    if (orderDetails !== null) {
+      setOpenDetailsDialog(true);
+    }
+  }, [orderDetails]);
+
+  console.log(orderDetails);
 
   return (
     <Card>
@@ -54,9 +69,13 @@ const ShoppingOrders = () => {
                     <TableCell>
                       <Badge
                         className={`py-1 px-3 ${
-                          orderItem.orderStatus === "confirmed"
+                          orderItem?.orderStatus === "confirmed"
                             ? "bg-green-500"
-                            : "bg-red-400"
+                            : orderItem?.orderStatus === "delivered"
+                            ? "bg-green-500"
+                            : orderItem?.orderStatus === "rejected"
+                            ? "bg-red-500"
+                            : "bg-black"
                         }`}
                       >
                         {orderItem?.orderStatus}
@@ -66,15 +85,20 @@ const ShoppingOrders = () => {
                     <TableCell>
                       <Dialog
                         open={openDetailsDialog}
-                        onOpenChange={setOpenDetailsDialog}
+                        onOpenChange={() => {
+                          setOpenDetailsDialog(false);
+                          dispatch(resetOrderDetails());
+                        }}
                       >
                         <Button
-                          onClick={() => setOpenDetailsDialog(true)}
+                          onClick={() =>
+                            handlefetchOrderDetails(orderItem?._id)
+                          }
                           className="bg-blue-600 hover:bg-blue-700"
                         >
                           View Details
                         </Button>
-                        <ShoppingOrderDetailsView />
+                        <ShoppingOrderDetailsView orderDetails={orderDetails} />
                       </Dialog>
                     </TableCell>
                   </TableRow>

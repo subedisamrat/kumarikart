@@ -3,16 +3,44 @@ import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import CommonForm from "../common/form";
+import { Badge } from "../ui/badge";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getAllOrdersForAdmin,
+  getOrderDetailsForAdmin,
+  updateOrderStatus,
+} from "@/store/admin/order-slice";
+import { useToast } from "../ui/use-toast";
 
 const initialFormData = {
   status: "",
 };
 
-const AdminOrderDetailsView = () => {
+const AdminOrderDetailsView = ({ orderDetails }) => {
   const [formData, setFormData] = useState(initialFormData);
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { toast } = useToast();
 
   function handleUpdateStatus(e) {
     e.preventDefault();
+
+    const { status } = formData;
+
+    dispatch(
+      updateOrderStatus({ id: orderDetails?._id, orderStatus: status }),
+    ).then((data) => {
+      console.log(data);
+      if (data?.payload?.success) {
+        dispatch(getOrderDetailsForAdmin(orderDetails?._id));
+        dispatch(getAllOrdersForAdmin());
+        setFormData(initialFormData);
+        toast({
+          title: "Success",
+          description: "✅ Order status updated successfully",
+        });
+      }
+    });
   }
 
   return (
@@ -21,19 +49,39 @@ const AdminOrderDetailsView = () => {
         <div className="grid gap-2">
           <div className="flex mt-7 items-center justify-between">
             <p className="font-medium">Order ID</p>
-            <Label>12342423</Label>
+            <Label>{orderDetails?._id}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Date</p>
-            <Label>2025/03/12</Label>
+            <Label>{orderDetails?.orderDate.split("T")[0]}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Total Price</p>
-            <Label>Rs. 69</Label>
+            <Label>{orderDetails?.totalAmount}</Label>
+          </div>
+          <div className="flex mt-2 items-center justify-between">
+            <p className="font-medium">Payment Method</p>
+            <Label>{orderDetails?.paymentMethod}</Label>
+          </div>
+          <div className="flex mt-2 items-center justify-between">
+            <p className="font-medium">Payment Status</p>
+            <Label>{orderDetails?.paymentStatus}</Label>
           </div>
           <div className="flex mt-2 items-center justify-between">
             <p className="font-medium">Order Status</p>
-            <Label>Pending</Label>
+            <Label>
+              <Badge
+                className={`py-1 px-3 ${
+                  orderDetails?.orderStatus === "confirmed"
+                    ? "bg-green-500"
+                    : orderDetails?.orderStatus === "rejected"
+                    ? "bg-red-500"
+                    : "bg-black"
+                }`}
+              >
+                {orderDetails?.orderStatus}
+              </Badge>
+            </Label>
           </div>
         </div>
         <Separator />
@@ -41,10 +89,15 @@ const AdminOrderDetailsView = () => {
           <div className="grid gap-2">
             <div className="font-medium">Order Details</div>
             <ul className="grid gap-3">
-              <li className="flex items-center justify-between mt-3">
-                <span>Product One</span>
-                <span>Rs.69</span>
-              </li>
+              {orderDetails?.cartItems && orderDetails?.cartItems.length > 0
+                ? orderDetails?.cartItems?.map((item) => (
+                    <li className="flex items-center justify-between mt-3">
+                      <span>Title: {item?.title}</span>
+                      <span>Quantity: {item?.quantity}</span>
+                      <span>Price: {item?.price}</span>
+                    </li>
+                  ))
+                : null}
             </ul>
           </div>
         </div>
@@ -55,12 +108,12 @@ const AdminOrderDetailsView = () => {
           <div className="grid gap-2">
             <div className="font-medium">Shipping Information</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              <span>Micahel Bhatta</span>
-              <span>Kathmandu</span>
-              <span>Putalisadak</span>
-              <span>44600</span>
-              <span>98354645345</span>
-              <span>Notes</span>
+              <span>{user?.userName}</span>
+              <span>{orderDetails?.addressInfo?.address}</span>
+              <span>{orderDetails?.addressInfo?.phone}</span>
+              <span>{orderDetails?.addressInfo?.notes}</span>
+              <span>{orderDetails?.addressInfo?.city}</span>
+              <span>{orderDetails?.addressInfo?.pincode}</span>
             </div>
           </div>
         </div>
@@ -71,7 +124,7 @@ const AdminOrderDetailsView = () => {
             formControls={[
               {
                 label: "Order Status",
-                name: "Status",
+                name: "status",
                 componentType: "select",
                 options: [
                   { id: "inPending", label: "Pending" },

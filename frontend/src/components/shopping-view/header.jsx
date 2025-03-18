@@ -17,6 +17,7 @@ import { logoutUser } from "@/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
+//import KumariKartLogo from "@/assets/banners/KumariKart logo.webp";
 
 function MenuItems() {
   const navigate = useNavigate();
@@ -142,6 +143,7 @@ const ShoppingViewHeader = () => {
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         <Link className="flex items-center gap-2" to="/shop/home">
           <HousePlus className="h-6 w-6" />
+          {/* <img className="w-auto h-auto object-contain" src={KumariKartLogo} /> */}
           <span className="font-bold">KumariKart</span>
         </Link>
         {/* for small devices */}
