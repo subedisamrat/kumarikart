@@ -2,4 +2,7 @@
 
 KumariKart is a modern eCommerce platform built with the MERN stack, featuring a sleek UI powered by ShadCN and Tailwind CSS. It provides users with a seamless shopping experience, allowing them to filter, sort, and search for products effortlessly. With a responsive design, secure authentication, and efficient product management, KumariKart ensures a smooth and engaging online shopping journey.
 
-12.13
+-should design and styles etc
+-integrate AI in it
+
+13.57

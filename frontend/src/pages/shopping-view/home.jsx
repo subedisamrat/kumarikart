@@ -63,6 +63,7 @@ const ShoppingHome = () => {
   );
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
   const slides = [kumariBanner, bannerOne, bannerTwo, bannerThree];
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -81,7 +82,45 @@ const ShoppingHome = () => {
     dispatch(fetchProductDetails(getCurrentProductId));
   }
 
-  function handleAddtoCart(getCurrentProductId) {
+  // function handleAddtoCart(getCurrentProductId) {
+  //   dispatch(
+  //     addToCart({
+  //       userId: user?.id,
+  //       productId: getCurrentProductId,
+  //       quantity: 1,
+  //     }),
+  //   ).then((data) => {
+  //     if (data?.payload?.success) {
+  //       dispatch(fetchCartItems(user?.id));
+  //       toast({
+  //         title: "Success",
+  //         description: "Product added to the cart",
+  //         outline: "none",
+  //       });
+  //     }
+  //   });
+  //   //console.log(getCurrentProductId);
+  // }
+
+  function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId,
+      );
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast({
+            title: `Only ${getQuantity} quantity can be added for this item`,
+            variant: "destructive",
+          });
+
+          return;
+        }
+      }
+    }
     dispatch(
       addToCart({
         userId: user?.id,
@@ -93,8 +132,8 @@ const ShoppingHome = () => {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: "Success",
+          variant: "outline",
           description: "Product added to the cart",
-          outline: "none",
         });
       }
     });

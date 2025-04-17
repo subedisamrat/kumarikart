@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -9,13 +9,77 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
 import { setProductDetails } from "@/store/shop/products-slice";
+import { Label } from "../ui/label";
+import StarRatingComponent from "../common/star-rating";
+import { addProductReview, getProductReviews } from "@/store/shop/review-slice";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
+  const [reviewMsg, setReviewMsg] = useState("");
+  const [rating, setRating] = useState(0);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const { reviews } = useSelector((state) => state.shopReview);
   const { toast } = useToast();
 
-  function handleAddtoCart(getCurrentProductId) {
+  function handleRatingChange(getRating) {
+    setRating(getRating);
+  }
+
+  function handleAddReview() {
+    dispatch(
+      addProductReview({
+        productId: productDetails?._id,
+        userId: user?.id,
+        userName: user.userName,
+        reviewMessage: reviewMsg,
+        reviewValue: rating,
+      }),
+    ).then((data) => {
+      if (data?.payload?.success) {
+        setRating(0);
+        setReviewMsg("");
+        dispatch(getProductReviews(productDetails?._id));
+        toast({
+          title: "Success",
+          description: "Your review has been recorded ✅",
+        });
+      }
+      //console.log(data);
+    });
+  }
+
+  useEffect(() => {
+    if (productDetails !== null) {
+      dispatch(getProductReviews(productDetails?._id));
+    }
+  }, [productDetails]);
+
+  const averageReview =
+    reviews && reviews.length > 0
+      ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
+        reviews.length
+      : 0;
+
+  function handleAddtoCart(getCurrentProductId, getTotalStock) {
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId,
+      );
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast({
+            title: `Only ${getQuantity} quantity can be added for this item`,
+            variant: "destructive",
+          });
+
+          return;
+        }
+      }
+    }
     dispatch(
       addToCart({
         userId: user?.id,
@@ -93,22 +157,50 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
           {/* Product rating  */}
           <div className="flex items-center gap-2 mt-2">
             <div className="flex items-center gap-0.5">
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
+              <StarRatingComponent rating={averageReview} />
             </div>
-            <span className="text-muted-foreground">{5}</span>
+            <span className="text-muted-foreground">
+              {averageReview.toFixed(2)}
+            </span>
           </div>
 
           {/* Add to Cart Button Below */}
           <div className="mt-5 mb-5">
+            {/* {productDetails?.totalStock === 0 ? (
+              <Button
+                onClick={() => handleAddtoCart(productDetails?._id)}
+                className="mt-2 w-full opacity-60 cursor-not-allowed"
+              >
+                Out of Stock
+              </Button>
+            ) : (
+              <Button
+                onClick={() =>
+                  handleAddtoCart(
+                    productDetails?._id,
+                    productDetails?.totalStock,
+                  )
+                }
+                className="mt-2 w-full"
+              >
+                Add to Cart
+              </Button>
+            )} */}
             <Button
-              onClick={() => handleAddtoCart(productDetails?._id)}
-              className="mt-2 w-full"
+              onClick={() =>
+                productDetails?.totalStock > 0 &&
+                handleAddtoCart(productDetails?._id, productDetails?.totalStock)
+              }
+              className={`mt-2 w-full ${
+                productDetails?.totalStock === 0
+                  ? "opacity-60 cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={productDetails?.totalStock === 0}
             >
-              Add to Cart
+              {productDetails?.totalStock === 0
+                ? "Out of Stock"
+                : "Add to Cart"}
             </Button>
           </div>
           <Separator />
@@ -118,7 +210,36 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
           <div className="max-h-[300px] overflow-auto">
             <h2 className="font-bold text-xl mb-4">Reviews</h2>
             <div className="grid gap-6">
-              <div className="flex gap-4">
+              {reviews && reviews.length > 0 ? (
+                reviews.map((reviewItm) => (
+                  <div className="flex gap-4">
+                    <Avatar className="w-10 h-10 border">
+                      <AvatarFallback>
+                        {reviewItm?.userName[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid gap-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold">{reviewItm?.userName}</h3>
+                      </div>
+                      <div className="flex items-center gap-0.5">
+                        <StarRatingComponent rating={reviewItm.reviewValue} />
+                        {/* <StarIcon className="w-5 h-5 fill-primary" />
+                        <StarIcon className="w-5 h-5 fill-primary" />
+                        <StarIcon className="w-5 h-5 fill-primary" />
+                        <StarIcon className="w-5 h-5 fill-primary" />
+                        <StarIcon className="w-5 h-5 fill-primary" /> */}
+                      </div>
+                      <p className="text-muted-foreground">
+                        {reviewItm.reviewMsg}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <h1>No Reviews</h1>
+              )}
+              {/* <div className="flex gap-4">
                 <Avatar className="w-10 h-10 border">
                   <AvatarFallback>SS</AvatarFallback>
                 </Avatar>
@@ -173,11 +294,28 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                   </div>
                   <p className="text-muted-foreground">This product is nice!</p>
                 </div>
-              </div>
+              </div> */}
             </div>
-            <div className="mt-6 flex gap-2">
-              <Input placeholder="write a review..." />
-              <Button>Submit</Button>
+            <div className="mt-10 flex flex-col gap-2">
+              <Label>Post your review</Label>
+              <div className="flex gap-2">
+                <StarRatingComponent
+                  rating={rating}
+                  handleRatingChange={handleRatingChange}
+                />
+              </div>
+              <Input
+                onChange={(e) => setReviewMsg(e.target.value)}
+                name="reviewMsg"
+                value={reviewMsg}
+                placeholder="write a review..."
+              />
+              <Button
+                onClick={handleAddReview}
+                disabled={reviewMsg.trim() === ""}
+              >
+                Submit
+              </Button>
             </div>
           </div>
         </div>

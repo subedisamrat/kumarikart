@@ -105,6 +105,7 @@
 import paypal from "../../config/paypal.js";
 import { Order } from "../../models/Order.js";
 import { Cart } from "../../models/Cart.js";
+import { Product } from "../../models/Product.js";
 
 const createOrder = async (req, res) => {
   try {
@@ -224,6 +225,20 @@ const capturePayment = async (req, res) => {
     order.orderStatus = "confirmed";
     (order.paymentId = paymentId), (order.payerId = payerId);
 
+    for (let item of order.cartItems) {
+      let product = await Product.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: `Not enough stock for ${product.title}`,
+        });
+      }
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
+
     const getCardId = order.cartId;
     await Cart.findByIdAndDelete(getCardId);
 
@@ -267,6 +282,7 @@ const getAllOrdersByUser = async (req, res) => {
     });
   }
 };
+
 const getOrderDetails = async (req, res) => {
   try {
     const { id } = req.params;
