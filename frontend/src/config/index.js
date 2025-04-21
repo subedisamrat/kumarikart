@@ -191,18 +191,18 @@ export const brandOptionsMap = {
 
 export const addressFormControls = [
   // {
-  //   label: "Address",
-  //   name: "address",
+  //   label: "Country",
+  //   name: "country",
   //   componentType: "input",
   //   type: "text",
-  //   placeholder: "Enter your address",
+  //   placeholder: "Enter your country name",
   // },
   {
-    label: "Country",
-    name: "country",
+    label: "Address",
+    name: "address",
     componentType: "input",
     type: "text",
-    placeholder: "Enter your country name",
+    placeholder: "Enter your address",
   },
   {
     label: "City",

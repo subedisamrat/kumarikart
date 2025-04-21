@@ -95,7 +95,10 @@ const ShoppingCheckout = () => {
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5 p-5">
-        <Address setCurrentSelectedAddress={setCurrentSelectedAddress} />
+        <Address
+          selectedId={currentSelectedAddress}
+          setCurrentSelectedAddress={setCurrentSelectedAddress}
+        />
         <div className="flex flex-col gap-5">
           {cartItems && cartItems.items && cartItems.items.length > 0
             ? cartItems.items.map((item) => (
@@ -113,7 +116,9 @@ const ShoppingCheckout = () => {
               onClick={handleInitiatePaypalPayment}
               className="w-full bg-blue-600 hover:bg-blue-700"
             >
-              Check out via paypal
+              {isPaymentStart
+                ? "Processing paypal payment....."
+                : " Check out via paypal"}
             </Button>
           </div>
         </div>
