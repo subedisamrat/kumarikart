@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
@@ -12,20 +13,23 @@ import shopOrderRouter from "./routes/shop/order-routes.js";
 import shopSearchRouter from "./routes/shop/search-routes.js";
 import shopReviewRouter from "./routes/shop/review-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
+import { configurePaypal } from "./config/paypal.js";
+import { configureCloudinary } from "./config/cloudinary.js";
 
+dotenv.config();
+configurePaypal();
+configureCloudinary();
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 mongoose
-  .connect(
-    "mongodb+srv://samratsubedi9:JDK6zjU98usdw2yZ@cluster0.mccol.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_BASE_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "Content-Type",
