@@ -21,8 +21,6 @@ import ProductDetailsDialog from "../../components/shopping-view/product-details
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { useToast } from "@/components/ui/use-toast";
 
-//should work in detail part where we add items to cart and then appear a dialog... date:2025-2-20 ts: 6:33:41
-
 function createSearchParamsHelper(filterParams) {
   const queryParams = [];
   for (const [key, value] of Object.entries(filterParams)) {

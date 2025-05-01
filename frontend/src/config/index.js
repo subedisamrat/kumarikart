@@ -102,6 +102,19 @@ export const addProductFormElements = [
     type: "number",
     placeholder: "Enter total stock",
   },
+  // {
+  //   label: "Available Sizes",
+  //   name: "size",
+  //   componentType: "multiselect",
+  //   options: [
+  //     { label: "Small (S)", value: "S" },
+  //     { label: "Medium (M)", value: "M" },
+  //     { label: "Large (L)", value: "L" },
+  //     { label: "Extra Large (XL)", value: "XL" },
+  //     { label: "Double XL (XXL)", value: "XXL" },
+  //     { label: "-", value: "-" },
+  //   ],
+  // },
 ];
 
 export const shoppingViewHeaderMenuItems = [

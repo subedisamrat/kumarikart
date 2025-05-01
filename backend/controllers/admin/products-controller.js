@@ -39,6 +39,7 @@ const addProduct = async (req, res) => {
       price,
       totalStock,
       salePrice,
+      //availableSize,
     } = req.body;
 
     if (
@@ -49,6 +50,7 @@ const addProduct = async (req, res) => {
       !brand ||
       !price ||
       !totalStock
+      // || !availableSize
     ) {
       return res.status(400).json({
         success: false,
@@ -64,6 +66,7 @@ const addProduct = async (req, res) => {
       price,
       totalStock,
       salePrice,
+      //availableSize,
     });
     await newlyCreatedProduct.save();
     res.status(200).json({
@@ -110,6 +113,7 @@ const editProduct = async (req, res) => {
       price,
       totalStock,
       salePrice,
+      //availableSize,
     } = req.body;
 
     let findProduct = await Product.findById(id);
@@ -128,7 +132,7 @@ const editProduct = async (req, res) => {
     findProduct.price = price === "" ? 0 : price || findProduct.price;
     findProduct.salePrice =
       salePrice === "" ? 0 : salePrice || findProduct.salePrice;
-    findProduct.totalStock = totalStock || findProduct.totalStock;
+    //findProduct.availableSize = availableSize || findProduct.availableSize;
 
     await findProduct.save();
     res.status(200).json({

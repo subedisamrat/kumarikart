@@ -10,6 +10,12 @@ const ProductSchema = new mongoose.Schema(
     price: Number,
     salePrice: Number,
     totalStock: Number,
+    // availableSize: {
+    //   type: String,
+    //   enum: ["S", "M", "L", "XL", "XXL", "-"],
+    //   required: true,
+    //   default: [],
+    // },
   },
   { timestamps: true },
 );

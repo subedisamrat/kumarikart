@@ -21,7 +21,6 @@ const addFeatureImage = async (req, res) => {
     });
   }
 };
-
 //It's used for client view
 const getFeatureImages = async (req, res) => {
   try {

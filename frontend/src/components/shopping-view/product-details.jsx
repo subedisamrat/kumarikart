@@ -44,6 +44,15 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
           title: "Success",
           description: "Your review has been recorded ✅",
         });
+      } else {
+        setRating(0);
+        setReviewMsg("");
+        toast({
+          title: "❌ Error",
+          description:
+            "Failed to record review, Please buy the product first to review!!",
+        });
+        return;
       }
       //console.log(data);
     });
