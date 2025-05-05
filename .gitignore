@@ -50,3 +50,5 @@ coverage/
 
 # Optional stylelint cache
 .stylelintcache
+
+config/

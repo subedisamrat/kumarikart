@@ -29,7 +29,7 @@ const initialFormData = {
   salePrice: "",
   totalStock: "",
   averageReview: 0,
-  size: [],
+  //size: [],
 };
 
 const AdminProducts = () => {
@@ -85,14 +85,13 @@ const AdminProducts = () => {
             toast({
               title: "Product added successfully",
             });
+          } else {
+            toast({
+              title: "Error",
+              description:
+                "All fields are required, and price & stock must be valid numbers!",
+            });
           }
-          // else {
-          //   toast({
-          //     title: "Error",
-          //     description:
-          //       "All fields are required, and price & stock must be valid numbers!",
-          //   });
-          // }
         });
   }
 

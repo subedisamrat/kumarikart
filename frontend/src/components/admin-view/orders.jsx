@@ -39,7 +39,7 @@ const AdminOrdersView = () => {
     }
   }, [orderDetails]);
 
-  console.log(orderDetails);
+  //console.log(orderDetails);
 
   return (
     <Card>
