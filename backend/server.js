@@ -59,7 +59,7 @@ app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 
 //Both for shopping and admin view
-app.use("/api/common/feature", commonFeatureRouter);
+app.use("/api/common/feature", commonFeatureRouter); //for feature image
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

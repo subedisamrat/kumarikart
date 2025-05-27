@@ -100,13 +100,72 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: "Success",
-          variant: "outline",
-          description: "Product added to the cart",
+          description: "Product added to the cart ✅",
         });
       }
     });
     //console.log(getCurrentProductId);
   }
+
+  // const saveGuestCartToLocalStorage = (cart) => {
+  //   localStorage.setItem("guest_cart", JSON.stringify(cart));
+  // };
+
+  // const getGuestCartFromLocalStorage = () => {
+  //   const cart = localStorage.getItem("guest_cart");
+  //   return cart ? JSON.parse(cart) : [];
+  // };
+
+  // function handleAddtoCart(getCurrentProductId, getTotalStock) {
+  //   // Guest User
+  //   if (!user?.id) {
+  //     let guestCart = getGuestCartFromLocalStorage();
+
+  //     const existingItem = guestCart.find(
+  //       (item) => item.productId === getCurrentProductId,
+  //     );
+
+  //     if (existingItem) {
+  //       if (existingItem.quantity + 1 > getTotalStock) {
+  //         toast({
+  //           title: `Only ${existingItem.quantity} quantity can be added for this item`,
+  //           variant: "destructive",
+  //         });
+  //         return;
+  //       }
+  //       existingItem.quantity += 1;
+  //     } else {
+  //       guestCart.push({ productId: getCurrentProductId, quantity: 1 });
+  //     }
+
+  //     saveGuestCartToLocalStorage(guestCart);
+
+  //     toast({
+  //       title: "Added to Guest Cart",
+  //       description: "Login to preserve your cart.",
+  //     });
+
+  //     return;
+  //   }
+
+  //   // Logged-in User
+  //   dispatch(
+  //     addToCart({
+  //       userId: user.id,
+  //       productId: getCurrentProductId,
+  //       quantity: 1,
+  //     }),
+  //   ).then((data) => {
+  //     if (data?.payload?.success) {
+  //       dispatch(fetchCartItems(user.id));
+  //       toast({
+  //         title: "Success",
+  //         variant: "outline",
+  //         description: "Product added to the cart",
+  //       });
+  //     }
+  //   });
+  // }
 
   if (!productDetails) return null;
 
