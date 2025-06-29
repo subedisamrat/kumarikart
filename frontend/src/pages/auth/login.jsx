@@ -30,14 +30,13 @@ const AuthLogin = () => {
         //console.log(data);
         if (data?.payload?.success) {
           toast({
-            title: data?.payload?.message || "Login successful",
-            variant: "success",
+            title: "Success",
+            description: "Logged in successfully✅",
           });
         } else {
           toast({
-            title: data?.payload?.message || "Login failed",
-            description: "Please login with valid credentials",
-            variant: "destructive",
+            title: "Login failed",
+            description: "Please login with valid credential❌",
           });
         }
       })
@@ -45,7 +44,7 @@ const AuthLogin = () => {
         console.error("Login error:", error);
         toast({
           title: "Login failed",
-          description: "An unexpected error occurred. Please try again.",
+          description: "An unexpected error occurred. Please try again!!",
           variant: "destructive",
         });
       });
@@ -67,7 +66,7 @@ const AuthLogin = () => {
             onSubmit={onSubmit}
           />
           <CardDescription className="mt-4 text-gray-600">
-            Don't have an account?{" "}
+            Don't have an account ?{" "}
             <Link
               to="/auth/register"
               className="font-medium text-blue-600 hover:underline"

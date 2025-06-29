@@ -128,7 +128,7 @@ const AdminOrderDetailsView = ({ orderDetails }) => {
                 componentType: "select",
                 options: [
                   { id: "inPending", label: "Pending" },
-                  { id: "inShipping", label: "In Shipping" },
+                  { id: "inShipping", label: "InShipping" },
                   { id: "delivered", label: "Delivered" },
                   { id: "rejected", label: "Rejected" },
                 ],

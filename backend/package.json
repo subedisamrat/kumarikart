@@ -18,12 +18,14 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "esewa-integration-server": "^2.3.5",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "khalti-payment": "^1.0.2",
     "mongoose": "^8.9.5",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.9",
-    "paypal-rest-sdk": "^1.8.1"
+    "paypal-rest-sdk": "^1.8.1",
+    "typo-js": "^1.2.5",
+    "uuid": "^11.1.0"
   }
 }

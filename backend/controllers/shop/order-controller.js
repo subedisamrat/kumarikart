@@ -1,3 +1,5 @@
+//Old Code✅
+
 // import paypal from "../../config/paypal.js";
 // import { Order } from "../../models/Order.js";
 
@@ -99,8 +101,11 @@
 //     });
 //   }
 // };
-
 // export { createOrder, capturePayment };
+
+//------------------------------------------------------------------------------------------------------------------------------------------//
+
+//Modified Code:✅
 
 import paypal from "../../config/paypal.js";
 import { Order } from "../../models/Order.js";
@@ -310,3 +315,5 @@ const getOrderDetails = async (req, res) => {
 };
 
 export { createOrder, capturePayment, getAllOrdersByUser, getOrderDetails };
+
+//------------------------------------------------------------------------------------------------------------------------------------------//

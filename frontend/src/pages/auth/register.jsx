@@ -31,14 +31,15 @@ const AuthRegister = () => {
     dispatch(registerUser(formData)).then((data) => {
       if (data?.payload?.success) {
         toast({
-          title: data?.payload?.message,
-          variant: "success",
+          title: "Success",
+          description: "User registration successful✅", //data?.payload?.message ||
         });
         navigate("/auth/login");
       } else {
         toast({
-          description: "User with this email exists, please use another email",
-          variant: "destructive",
+          title: "Error",
+          description:
+            "User with this email exists, please use another email❌",
         });
       }
     });

@@ -52,7 +52,7 @@ const shoppingOrderSlice = createSlice({
   name: "shoppingOrderSlice",
   initialState,
   reducers: {
-    setOrderDetails: (state) => {
+    resetOrderDetails: (state) => {
       state.orderDetails = null;
     },
   },
