@@ -599,7 +599,7 @@ const AdminOrdersView = () => {
               <Label className="text-sm">Status</Label>
               <Select value={filters.status} onValueChange={handleStatusChange}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Statuses" />
+                  <SelectValue placeholder="Order Status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Status</SelectItem>

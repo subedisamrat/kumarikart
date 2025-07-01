@@ -91,7 +91,8 @@
 
 // export default ShoppingOrderDetailsView;
 
-// ShoppingOrderDetailsView.js
+// ShoppingOrderDetailsView with filter functionality✅
+
 import React from "react";
 import { Label } from "../ui/label";
 import { DialogContent } from "../ui/dialog";

@@ -1,6 +1,6 @@
 # Ignore  .env files 
 .env*
-.env.example
+!.env.example
 
 # Ignore OS metadata
 ._*
