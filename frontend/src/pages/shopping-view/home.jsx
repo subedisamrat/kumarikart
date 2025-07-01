@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 //Banner Images
 import kumariBanner from "../../assets/banners/kumaribanner.webp";
-import bannerOne from "../../assets/banners/banner-1.webp";
-import bannerTwo from "../../assets/banners/banner-2.webp";
-import bannerThree from "../../assets/banners/banner-3.webp";
+import bannerOne from "../../assets/banners/banner 1.webp";
+import bannerTwo from "../../assets/banners/banner 2.webp";
+import bannerThree from "../../assets/banners/banner 3.webp";
 //Brand Icons
 import adidasIcon from "../../assets/brands/adidas.svg";
 import nikeIcon from "../../assets/brands/nike.svg";

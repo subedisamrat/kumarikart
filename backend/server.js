@@ -29,7 +29,7 @@ mongoose
 
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL,
+    origin: process.env.CLIENT_BASE_URL || "https://kumarikart.vercel.app", //for vercel✅
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "Content-Type",
@@ -61,6 +61,8 @@ app.use("/api/shop/review", shopReviewRouter);
 //Both for shopping and admin view
 app.use("/api/common/feature", commonFeatureRouter); //for feature image
 
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server started on port ${port}`);
+// }); //for vercel setup✅
+
+export default app;
