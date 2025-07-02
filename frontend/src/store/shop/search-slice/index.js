@@ -10,8 +10,8 @@ export const getSearchResults = createAsyncThunk(
   "/order/getSearchResults",
   async (keyword) => {
     const response = await axios.get(
-      // `http://localhost:5000/api/shop/search/${keyword}`, //for normal search
-      `http://localhost:5000/api/shop/search?q=${keyword}`, //for AI searches I modified it into this so for reference i kept it above for normal searches.
+      // `${import.meta.env.VITE_API_URL}/api/shop/search/${keyword}`, //for normal search
+      `${import.meta.env.VITE_API_URL}/api/shop/search?q=${keyword}`, //for AI searches I modified it into this so for reference i kept it above for normal searches.
     );
     return response.data;
   },

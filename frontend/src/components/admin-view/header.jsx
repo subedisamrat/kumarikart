@@ -10,13 +10,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { useNavigate } from "react-router-dom";
 
 const AdminHeader = ({ setOpen }) => {
   const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate();
 
   function handleLogout() {
-    dispatch(logoutUser());
+    dispatch(resetTokenaAndCredentials());
+    sessionStorage.clear();
+    navigate("/auth/login");
+    // dispatch(logoutUser());
     setOpenDialog(false);
   }
 

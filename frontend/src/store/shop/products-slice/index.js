@@ -13,7 +13,7 @@ export const fetchFilteredProducts = createAsyncThunk(
     const query = new URLSearchParams({ ...filterParams, sortBy: sortParams });
 
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/getproducts?${query}`,
+      `${import.meta.env.VITE_API_URL}/api/shop/products/getproducts?${query}`,
     );
     return result?.data;
   },
@@ -23,7 +23,7 @@ export const fetchProductDetails = createAsyncThunk(
   "/products/fetchProductDetails",
   async (id) => {
     const result = await axios.get(
-      `http://localhost:5000/api/shop/products/getproducts/${id}`,
+      `${import.meta.env.VITE_API_URL}/api/shop/products/getproducts/${id}`,
     );
     return result?.data;
   },
