@@ -73,7 +73,10 @@ function HeaderRightContent() {
   const dispatch = useDispatch();
 
   function handleLogout() {
-    dispatch(logoutUser());
+    // dispatch(logoutUser()); //old
+    dispatch(resetTokenaAndCredentials());
+    sessionStorage.clear();
+    navigate("/auth/login");
   }
 
   useEffect(() => {
