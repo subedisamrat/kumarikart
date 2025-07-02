@@ -18,7 +18,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@radix-ui/react-dropdown-menu";
-import { logoutUser } from "@/store/auth-slice";
+import { logoutUser, resetTokenaAndCredentials } from "@/store/auth-slice";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
