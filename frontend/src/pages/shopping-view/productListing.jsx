@@ -139,7 +139,7 @@ const ShoppingList = () => {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: "Success",
-          description: "✅ Product added to the cart!",
+          description: "Product added to the cart ✅",
         });
       }
     });

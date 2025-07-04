@@ -158,6 +158,11 @@ export const shoppingViewHeaderMenuItems = [
     label: "Search",
     path: "/shop/search",
   },
+  {
+    id: "Top Rated",
+    label: "Top-rated",
+    path: "/shop/top-rated",
+  },
 ];
 
 export const filterOptions = {

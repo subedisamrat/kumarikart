@@ -1,5 +1,15 @@
 import mongoose from "mongoose";
 
+const reviewSchema = new mongoose.Schema(
+  {
+    user: { type: String, required: true },
+    rating: { type: Number, required: true },
+    comment: { type: String },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { _id: false },
+);
+
 const ProductSchema = new mongoose.Schema(
   {
     image: String,
@@ -16,6 +26,11 @@ const ProductSchema = new mongoose.Schema(
     //   required: true,
     //   default: [],
     // },
+    reviews: [reviewSchema],
+    totalReviews: { type: Number, default: 0 },
+    positiveReviews: { type: Number, default: 0 },
+    wilsonScore: { type: Number, default: 0 },
+    averageReview: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

@@ -154,6 +154,7 @@ import { Navigate } from "react-router-dom";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import TopRatedProducts from "./pages/shopping-view/top-rated";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -319,6 +320,7 @@ function App() {
           <Route path="paypal-return" element={<PaypalReturnPage />} />
           <Route path="payment-success" element={<PaymentSuccessPage />} />
           <Route path="search" element={<SearchProducts />} />
+          <Route path="top-rated" element={<TopRatedProducts />} />
         </Route>
       </Routes>
     </div>

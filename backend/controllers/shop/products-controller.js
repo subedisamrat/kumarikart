@@ -1,4 +1,5 @@
 import { Product } from "../../models/Product.js";
+import { calculateWilsonScore } from "../../utils/wilsonScore.js";
 
 const getFilteredProducts = async (req, res) => {
   try {
@@ -80,4 +81,47 @@ const getProductDetails = async (req, res) => {
   }
 };
 
-export { getFilteredProducts, getProductDetails };
+const getAllProductsSortedByWilsonScore = async (req, res) => {
+  try {
+    // Step 1: Get all products
+    const products = await Product.find();
+    if (!products) {
+      console.log("Products not found");
+    }
+
+    // Step 2: Recalculate and update Wilson scores
+    const updatedProducts = await Promise.all(
+      products.map(async (product) => {
+        const { positiveReviews, totalReviews } = product;
+
+        const score = calculateWilsonScore(positiveReviews, totalReviews);
+
+        product.wilsonScore = score;
+
+        await product.save(); // Save updated score
+
+        return product;
+      }),
+    );
+
+    // Step 3: Sort by Wilson score descending
+    updatedProducts.sort((a, b) => b.wilsonScore - a.wilsonScore);
+
+    res.status(200).json({
+      success: true,
+      data: updatedProducts,
+    });
+  } catch (error) {
+    console.error("Error fetching and sorting by Wilson Score:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export {
+  getFilteredProducts,
+  getProductDetails,
+  getAllProductsSortedByWilsonScore,
+};

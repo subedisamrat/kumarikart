@@ -134,8 +134,7 @@ const ShoppingHome = () => {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: "Success",
-          variant: "outline",
-          description: "Product added to the cart",
+          description: "Product added to the cart✅",
         });
       }
     });
