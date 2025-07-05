@@ -130,7 +130,7 @@ function AuthLayout() {
           {/* Mobile Header */}
           <div className="lg:hidden py-10 px-6 bg-gradient-to-r from-[#fef3c7] to-[#fee2e2] relative">
             <div className="flex justify-center">
-              <div className="p-1 bg-gradient-to-br from-[#d4a017] to-[#b91c1c] rounded-xl animate-pulse">
+              <div className="p-1 bg-gradient-to-br from-[#d4a017] to-[#b91c1c] rounded-xl">
                 <div className="p-5 bg-white rounded-lg flex justify-center">
                   <img
                     src={KumariKartLogo}
